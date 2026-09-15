@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>PDF Alfa - PDF Tools</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar">
+
+    <div class="nav-container">
+
+        <a href="/" class="logo">
+            <span class="logo-icon">📄</span>
+            <span>PDF Alfa</span>
+        </a>
+
+        <div class="nav-links">
+
+            <a href="/" class="nav-link">
+                Home
+            </a>
+
+            <a href="/tools" class="nav-link active">
+                PDF Tools
+            </a>
+
+        </div>
+
+    </div>
+
+</nav>
+
+
+<section class="tools-section">
+
+    <div class="section-heading">
+
+        <h1>PDF Tools</h1>
+
+        <p>
+            Choose the PDF tool you need.
+        </p>
+
+    </div>
+
+
+    <div class="tools-grid">
+
+        <div class="tool-card">
+
+            <div class="tool-icon">📄</div>
+
+            <h2>PDF Merger</h2>
+
+            <p>
+                Merge multiple PDF files into one document.
+            </p>
+
+            <a href="/merger" class="tool-btn">
+                Open PDF Merger
+            </a>
+
+        </div>
+
+
+        <div class="tool-card">
+
+            <div class="tool-icon">✂️</div>
+
+            <h2>PDF Splitter</h2>
+
+            <p>
+                Extract selected pages from a PDF file.
+            </p>
+
+            <a href="/splitter" class="tool-btn">
+                Open PDF Splitter
+            </a>
+
+        </div>
+
+
+        <div class="tool-card">
+
+            <div class="tool-icon">🔄</div>
+
+            <h2>PDF Rotator</h2>
+
+            <p>
+                Rotate all pages of a PDF document.
+            </p>
+
+            <a href="/rotator" class="tool-btn">
+                Open PDF Rotator
+            </a>
+
+        </div>
+
+
+        <div class="tool-card">
+
+            <div class="tool-icon">🗜️</div>
+
+            <h2>PDF Compressor</h2>
+
+            <p>
+                Reduce the size of a PDF document.
+            </p>
+
+            <a href="/compressor" class="tool-btn">
+                Open PDF Compressor
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<footer class="footer">
+
+    <div class="footer-bottom">
+
+        <p>
+            © 2026 PDF Tools. All rights reserved.
+        </p>
+
+    </div>
+
+</footer>
+
+</body>
+</html>

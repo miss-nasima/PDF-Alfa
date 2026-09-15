@@ -1,0 +1,1175 @@
+/* =========================
+   GLOBAL
+========================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: #f5f7fb;
+
+    color: #1f2937;
+}
+
+.container {
+    width: 90%;
+
+    max-width: 1100px;
+
+    margin: 0 auto;
+
+    padding: 50px 20px;
+}
+
+h1 {
+    text-align: center;
+
+    font-size: 42px;
+
+    margin-bottom: 10px;
+
+    color: #111827;
+}
+
+.subtitle {
+    text-align: center;
+
+    color: #6b7280;
+
+    font-size: 18px;
+
+    margin-bottom: 45px;
+}
+
+
+/* =========================
+   NAVBAR
+========================= */
+
+.navbar {
+    background: white;
+
+    border-bottom: 1px solid #e5e7eb;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 1000;
+
+    box-shadow:
+        0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.nav-container {
+    max-width: 1100px;
+
+    width: 90%;
+
+    margin: auto;
+
+    height: 70px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    text-decoration: none;
+
+    color: #111827;
+
+    font-size: 22px;
+
+    font-weight: 800;
+}
+
+.logo-icon {
+    font-size: 28px;
+}
+
+.nav-links {
+    display: flex;
+
+    align-items: center;
+
+    gap: 30px;
+}
+
+.nav-link {
+    text-decoration: none;
+
+    color: #6b7280;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.nav-link:hover {
+    color: #4f46e5;
+}
+
+.nav-link.active {
+    color: #4f46e5;
+}
+
+
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero {
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f8fafc
+        );
+
+    padding: 90px 20px 100px;
+
+    text-align: center;
+
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.hero-content {
+    max-width: 850px;
+
+    margin: auto;
+}
+
+.hero-badge {
+    display: inline-block;
+
+    background: white;
+
+    border: 1px solid #e0e7ff;
+
+    color: #4f46e5;
+
+    padding: 8px 16px;
+
+    border-radius: 30px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    margin-bottom: 22px;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.hero h1 {
+    font-size: 52px;
+
+    line-height: 1.15;
+
+    margin: 0 auto 20px;
+
+    color: #111827;
+
+    max-width: 800px;
+}
+
+.hero h1 span {
+    display: block;
+
+    color: #4f46e5;
+}
+
+.hero p {
+    max-width: 680px;
+
+    margin: 0 auto;
+
+    font-size: 19px;
+
+    line-height: 1.7;
+
+    color: #6b7280;
+}
+
+.hero-buttons {
+    margin-top: 32px;
+
+    display: flex;
+
+    justify-content: center;
+
+    gap: 14px;
+
+    flex-wrap: wrap;
+}
+
+.hero-btn {
+    display: inline-block;
+
+    padding: 14px 24px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    transition: 0.2s ease;
+}
+
+.primary-btn {
+    background: #4f46e5;
+
+    color: white;
+
+    box-shadow:
+        0 6px 15px rgba(79, 70, 229, 0.25);
+}
+
+.primary-btn:hover {
+    background: #4338ca;
+
+    transform: translateY(-2px);
+}
+
+.secondary-btn {
+    background: white;
+
+    color: #4f46e5;
+
+    border: 1px solid #c7d2fe;
+}
+
+.secondary-btn:hover {
+    background: #eef2ff;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   FEATURES SECTION
+========================= */
+
+.features-section {
+    padding: 80px 20px;
+
+    background: white;
+}
+
+.section-heading {
+    text-align: center;
+
+    margin-bottom: 45px;
+}
+
+.section-heading h2 {
+    font-size: 34px;
+
+    margin: 0 0 10px;
+
+    color: #111827;
+}
+
+.section-heading p {
+    margin: 0;
+
+    color: #6b7280;
+
+    font-size: 17px;
+}
+
+.features-grid {
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 25px;
+}
+
+.feature-card {
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 18px;
+
+    padding: 30px 25px;
+
+    text-align: center;
+
+    transition: 0.25s ease;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.08);
+}
+
+.feature-icon {
+    width: 65px;
+
+    height: 65px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #eef2ff;
+
+    border-radius: 16px;
+
+    font-size: 30px;
+}
+
+.feature-card h3 {
+    margin: 10px 0;
+
+    font-size: 20px;
+
+    color: #111827;
+}
+
+.feature-card p {
+    margin: 0;
+
+    color: #6b7280;
+
+    line-height: 1.6;
+
+    font-size: 15px;
+}
+
+
+/* =========================
+   PDF TOOLS GRID
+========================= */
+
+.tools-section {
+    padding: 80px 20px;
+
+    background: #f5f7fb;
+}
+
+.tools-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 25px;
+
+    max-width: 900px;
+
+    margin: auto;
+}
+
+.tool-card {
+    background: white;
+
+    border-radius: 18px;
+
+    padding: 32px 28px;
+
+    text-align: center;
+
+    border: 1px solid #e5e7eb;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.06);
+
+    transition: 0.25s ease;
+}
+
+.tool-card:hover {
+    transform: translateY(-6px);
+
+    box-shadow:
+        0 15px 35px rgba(0, 0, 0, 0.10);
+}
+
+.tool-icon {
+    width: 75px;
+
+    height: 75px;
+
+    margin: 0 auto 20px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    font-size: 38px;
+
+    background: #eef2ff;
+
+    border-radius: 18px;
+}
+
+.tool-card h2 {
+    margin: 10px 0;
+
+    font-size: 24px;
+}
+
+.tool-card p {
+    color: #6b7280;
+
+    line-height: 1.6;
+
+    min-height: 50px;
+}
+
+
+/* =========================
+   TOOL BUTTON
+========================= */
+
+.tool-btn,
+.choose-btn,
+.merge-btn,
+.download-btn {
+    display: inline-block;
+
+    border: none;
+
+    text-decoration: none;
+
+    padding: 13px 22px;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.tool-btn {
+    background: #4f46e5;
+
+    color: white;
+
+    margin-top: 12px;
+}
+
+.tool-btn:hover {
+    background: #4338ca;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   UPLOAD BOX
+========================= */
+
+.upload-box {
+    max-width: 700px;
+
+    margin: 30px auto;
+
+    background: white;
+
+    border: 2px dashed #c7d2fe;
+
+    border-radius: 18px;
+
+    padding: 45px 30px;
+
+    text-align: center;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.05);
+}
+
+.upload-box h2 {
+    margin-top: 0;
+
+    font-size: 25px;
+}
+
+.upload-box p {
+    color: #6b7280;
+
+    margin-bottom: 25px;
+}
+
+.choose-btn {
+    background: #4f46e5;
+
+    color: white;
+}
+
+.choose-btn:hover {
+    background: #4338ca;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   SELECTED FILE
+========================= */
+
+.selected-file {
+    max-width: 700px;
+
+    margin: 20px auto;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 15px 18px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    box-shadow:
+        0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.pdf-icon {
+    font-size: 25px;
+}
+
+.selected-file-name {
+    flex: 1;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.remove-file-btn {
+    border: none;
+
+    background: #fee2e2;
+
+    color: #dc2626;
+
+    padding: 8px 12px;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    font-weight: bold;
+}
+
+.remove-file-btn:hover {
+    background: #fecaca;
+}
+
+
+/* =========================
+   MERGER FILE LIST
+========================= */
+
+.file-item {
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    padding: 14px 16px;
+
+    margin: 10px auto;
+
+    max-width: 700px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.file-number {
+    width: 30px;
+
+    height: 30px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background: #eef2ff;
+
+    color: #4f46e5;
+
+    border-radius: 50%;
+
+    font-weight: bold;
+}
+
+.drag-icon {
+    color: #9ca3af;
+
+    font-size: 20px;
+}
+
+.file-name {
+    flex: 1;
+
+    font-weight: 600;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+.file-controls {
+    display: flex;
+
+    gap: 5px;
+}
+
+
+/* =========================
+   MAIN ACTION BUTTON
+========================= */
+
+.merge-btn {
+    display: block;
+
+    margin: 25px auto;
+
+    background: #4f46e5;
+
+    color: white;
+
+    min-width: 180px;
+}
+
+.merge-btn:hover {
+    background: #4338ca;
+
+    transform: translateY(-2px);
+}
+
+.merge-btn:disabled {
+    background: #9ca3af;
+
+    cursor: not-allowed;
+
+    transform: none;
+}
+
+
+/* =========================
+   DOWNLOAD BUTTON
+========================= */
+
+.download-btn {
+    background: #16a34a;
+
+    color: white;
+
+    margin: 15px auto;
+}
+
+.download-btn:hover {
+    background: #15803d;
+
+    transform: translateY(-2px);
+}
+
+
+/* =========================
+   ROTATION OPTIONS
+========================= */
+
+.rotate-options {
+    max-width: 700px;
+
+    margin: 25px auto;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 15px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.rotate-options h2 {
+    text-align: center;
+
+    margin-top: 0;
+}
+
+.rotation-option {
+    display: block;
+
+    padding: 14px;
+
+    margin: 10px 0;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 9px;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+.rotation-option:hover {
+    background: #eef2ff;
+
+    border-color: #a5b4fc;
+}
+
+.rotation-option input {
+    margin-right: 10px;
+}
+
+
+/* =========================
+   COMPRESSION RESULT
+========================= */
+
+.compression-result {
+    max-width: 700px;
+
+    margin: 25px auto;
+
+    background: white;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 15px;
+
+    padding: 25px;
+
+    text-align: center;
+
+    box-shadow:
+        0 6px 20px rgba(0, 0, 0, 0.05);
+}
+
+.compression-result h2 {
+    margin-top: 0;
+
+    color: #16a34a;
+}
+
+.compression-result p {
+    margin: 12px 0;
+
+    color: #4b5563;
+
+    font-size: 16px;
+}
+
+
+/* =========================
+   FILE COUNT
+========================= */
+
+#file-count {
+    text-align: center;
+
+    font-weight: bold;
+
+    color: #4f46e5;
+
+    margin: 15px 0;
+}
+
+
+/* =========================
+   CALL TO ACTION
+========================= */
+
+.cta-section {
+    padding: 75px 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f8fafc
+        );
+
+    text-align: center;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.cta-content {
+    max-width: 700px;
+
+    margin: auto;
+}
+
+.cta-content h2 {
+    margin: 0 0 12px;
+
+    font-size: 34px;
+
+    color: #111827;
+}
+
+.cta-content p {
+    margin: 0 0 25px;
+
+    color: #6b7280;
+
+    font-size: 17px;
+}
+
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer {
+    background: #111827;
+
+    color: white;
+
+    margin-top: 0;
+}
+
+.footer-container {
+    max-width: 1100px;
+
+    width: 90%;
+
+    margin: auto;
+
+    padding: 55px 0;
+
+    display: grid;
+
+    grid-template-columns:
+        2fr 1fr 1fr;
+
+    gap: 60px;
+}
+
+.footer-logo {
+    font-size: 22px;
+
+    font-weight: 800;
+
+    margin-bottom: 14px;
+}
+
+.footer-brand p {
+    color: #9ca3af;
+
+    line-height: 1.7;
+
+    max-width: 300px;
+}
+
+.footer h3 {
+    font-size: 16px;
+
+    margin-top: 0;
+
+    margin-bottom: 18px;
+}
+
+.footer-links,
+.footer-tools {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 10px;
+}
+
+.footer a {
+    color: #9ca3af;
+
+    text-decoration: none;
+
+    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+.footer a:hover {
+    color: white;
+
+    padding-left: 3px;
+}
+
+.footer-bottom {
+    border-top: 1px solid #374151;
+
+    text-align: center;
+
+    padding: 20px;
+
+    color: #9ca3af;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 700px) {
+
+    .container {
+        width: 95%;
+
+        padding: 30px 10px;
+    }
+
+    h1 {
+        font-size: 32px;
+    }
+
+    .subtitle {
+        font-size: 16px;
+    }
+
+
+    /* NAVBAR */
+
+    .nav-container {
+        height: 62px;
+    }
+
+    .logo {
+        font-size: 19px;
+    }
+
+    .logo-icon {
+        font-size: 24px;
+    }
+
+    .nav-links {
+        gap: 15px;
+    }
+
+    .nav-link {
+        font-size: 13px;
+    }
+
+
+    /* HERO */
+
+    .hero {
+        padding: 65px 18px 75px;
+    }
+
+    .hero h1 {
+        font-size: 38px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .hero-buttons {
+        flex-direction: column;
+
+        align-items: center;
+    }
+
+    .hero-btn {
+        width: 100%;
+
+        max-width: 280px;
+
+        text-align: center;
+    }
+
+
+    /* FEATURES */
+
+    .features-section {
+        padding: 60px 15px;
+    }
+
+    .features-grid {
+        grid-template-columns: 1fr;
+
+        max-width: 450px;
+    }
+
+    .feature-card {
+        padding: 25px 20px;
+    }
+
+
+    /* TOOLS */
+
+    .tools-section {
+        padding: 60px 15px;
+    }
+
+    .tools-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .tool-card {
+        padding: 25px 20px;
+    }
+
+
+    /* FILE */
+
+    .selected-file {
+        padding: 12px;
+    }
+
+    .remove-file-btn {
+        font-size: 12px;
+
+        padding: 7px 9px;
+    }
+
+
+    /* CTA */
+
+    .cta-section {
+        padding: 60px 20px;
+    }
+
+    .cta-content h2 {
+        font-size: 28px;
+    }
+
+
+    /* FOOTER */
+
+    .footer-container {
+        grid-template-columns: 1fr;
+
+        gap: 30px;
+
+        padding: 40px 0;
+    }
+
+}
+/* =========================
+   SPLITTER PAGE RANGE
+========================= */
+
+.split-range {
+    margin-top: 30px;
+
+    padding-top: 25px;
+
+    border-top: 1px solid #e5e7eb;
+}
+
+.split-range label {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-weight: 700;
+
+    color: #111827;
+}
+
+.split-range input {
+    width: 100%;
+
+    max-width: 350px;
+
+    padding: 13px 15px;
+
+    border: 1px solid #d1d5db;
+
+    border-radius: 9px;
+
+    font-size: 15px;
+
+    outline: none;
+}
+
+.split-range input:focus {
+    border-color: #4f46e5;
+
+    box-shadow:
+        0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.split-range p {
+    margin-top: 10px;
+
+    margin-bottom: 0;
+
+    color: #6b7280;
+
+    font-size: 14px;
+}

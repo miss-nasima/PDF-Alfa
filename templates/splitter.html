@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PDF Splitter</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <h1>PDF Splitter</h1>
+
+    <p class="subtitle">
+        Extract selected pages from a PDF
+    </p>
+
+
+    <!-- =========================
+         SELECT PDF + PAGE RANGE
+    ========================= -->
+
+    <div class="upload-box">
+
+        <h2>Select PDF</h2>
+
+        <p>
+            Choose a PDF file to split
+        </p>
+
+
+        <!-- PDF SELECT -->
+
+        <input
+            type="file"
+            id="pdf-file"
+            accept=".pdf,application/pdf"
+            hidden
+        >
+
+
+        <label
+            for="pdf-file"
+            class="choose-btn">
+
+            + Select PDF
+
+        </label>
+
+        <!-- PAGE RANGE -->
+
+        <div class="split-range">
+
+            <label for="page-range">
+                Page Range
+            </label>
+
+            <input
+                type="text"
+                id="page-range"
+                placeholder="Example: 2-5"
+            >
+
+            <p>
+                Enter a single page like
+                <b>3</b>
+                or a range like
+                <b>2-5</b>
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         SELECTED FILE
+    ========================= -->
+
+    <div id="selected-file"></div>
+
+
+    <!-- =========================
+         SPLIT BUTTON
+    ========================= -->
+
+    <button
+        id="split-button"
+        class="merge-btn">
+
+        Split PDF
+
+    </button>
+
+
+    <!-- =========================
+         DOWNLOAD
+    ========================= -->
+
+    <div id="download-area", align="center" ></div>
+
+
+</div>
+
+
+
+<script>
+
+
+/* =========================
+   ELEMENTS
+========================= */
+
+const pdfInput =
+    document.getElementById("pdf-file");
+
+
+const selectedFileArea =
+    document.getElementById("selected-file");
+
+
+const pageRange =
+    document.getElementById("page-range");
+
+
+const splitButton =
+    document.getElementById("split-button");
+
+
+const downloadArea =
+    document.getElementById("download-area");
+
+
+let selectedFile = null;
+
+
+
+/* =========================
+   SELECT PDF
+========================= */
+
+pdfInput.addEventListener(
+    "change",
+    function () {
+
+        if (pdfInput.files.length === 0) {
+
+            return;
+
+        }
+
+
+        selectedFile =
+            pdfInput.files[0];
+
+
+        showSelectedFile();
+
+    }
+);
+
+
+
+/* =========================
+   SHOW SELECTED FILE
+========================= */
+
+function showSelectedFile() {
+
+    selectedFileArea.innerHTML = "";
+
+
+    if (!selectedFile) {
+
+        return;
+
+    }
+
+
+    const fileBox =
+        document.createElement("div");
+
+
+    fileBox.className =
+        "selected-file";
+
+
+    /* File Icon */
+
+    const icon =
+        document.createElement("span");
+
+
+    icon.className =
+        "pdf-icon";
+
+
+    icon.textContent =
+        "📄";
+
+
+    /* File Name */
+
+    const fileName =
+        document.createElement("span");
+
+
+    fileName.className =
+        "selected-file-name";
+
+
+    fileName.textContent =
+        selectedFile.name;
+
+
+    /* Remove Button */
+
+    const removeButton =
+        document.createElement("button");
+
+
+    removeButton.type =
+        "button";
+
+
+    removeButton.textContent =
+        "✕ Remove";
+
+
+    removeButton.className =
+        "remove-file-btn";
+
+
+    removeButton.onclick =
+        function () {
+
+            selectedFile = null;
+
+            pdfInput.value = "";
+
+            selectedFileArea.innerHTML = "";
+
+            downloadArea.innerHTML = "";
+
+            pageRange.value = "";
+
+        };
+
+
+    /* Add Elements */
+
+    fileBox.appendChild(
+        icon
+    );
+
+
+    fileBox.appendChild(
+        fileName
+    );
+
+
+    fileBox.appendChild(
+        removeButton
+    );
+
+
+    selectedFileArea.appendChild(
+        fileBox
+    );
+
+}
+
+
+
+/* =========================
+   SPLIT PDF
+========================= */
+
+splitButton.addEventListener(
+    "click",
+    async function () {
+
+
+        /* Check PDF */
+
+        if (!selectedFile) {
+
+            alert(
+                "Please select a PDF file."
+            );
+
+            return;
+
+        }
+
+
+        /* Check Page Range */
+
+        if (!pageRange.value.trim()) {
+
+            alert(
+                "Please enter page range."
+            );
+
+            return;
+
+        }
+
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "pdf",
+            selectedFile
+        );
+
+
+        formData.append(
+            "page_range",
+            pageRange.value.trim()
+        );
+
+
+        splitButton.disabled =
+            true;
+
+
+        splitButton.textContent =
+            "Splitting...";
+
+
+        try {
+
+
+            const response =
+                await fetch(
+                    "/split",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                const error =
+                    await response.text();
+
+
+                throw new Error(
+                    error
+                );
+
+            }
+
+
+            const blob =
+                await response.blob();
+
+
+            const url =
+                window.URL.createObjectURL(
+                    blob
+                );
+
+
+            const downloadButton =
+                document.createElement("a");
+
+
+            downloadButton.href =
+                url;
+
+
+            downloadButton.download =
+                "split_pages.pdf";
+
+
+            downloadButton.textContent =
+                "⬇ Download Split PDF";
+
+
+            downloadButton.className =
+                "download-btn";
+
+
+            downloadArea.innerHTML =
+                "";
+
+
+            downloadArea.appendChild(
+                downloadButton
+            );
+
+
+            alert(
+                "PDF split successfully!"
+            );
+
+        }
+
+
+        catch (error) {
+
+            alert(
+                "PDF split failed!\n\n" +
+                error.message
+            );
+
+        }
+
+
+        splitButton.disabled =
+            false;
+
+
+        splitButton.textContent =
+            "Split PDF";
+
+    }
+);
+
+</script>
+
+
+</body>
+
+</html>

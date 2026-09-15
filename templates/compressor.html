@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PDF Compressor</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>PDF Compressor</h1>
+
+    <p class="subtitle">
+        Reduce the size of your PDF file
+    </p>
+
+
+    <!-- =========================
+         SELECT PDF
+    ========================== -->
+
+    <div class="upload-box">
+
+        <h2>Select PDF</h2>
+
+        <p>
+            Choose a PDF file to compress
+        </p>
+
+        <input
+            type="file"
+            id="pdf-file"
+            accept=".pdf,application/pdf"
+            hidden
+        >
+
+        <label
+            for="pdf-file"
+            class="choose-btn">
+
+            + Select PDF
+
+        </label>
+
+    </div>
+
+
+    <!-- =========================
+         SELECTED FILE
+    ========================== -->
+
+    <div id="selected-file"></div>
+
+
+    <!-- =========================
+         COMPRESS BUTTON
+    ========================== -->
+
+    <button
+        id="compress-button"
+        class="merge-btn">
+
+        Compress PDF
+
+    </button>
+
+
+    <!-- =========================
+         RESULT
+    ========================== -->
+
+    <div id="result"></div>
+
+
+    <!-- =========================
+         DOWNLOAD
+    ========================== -->
+
+    <div id="download-area" align="center"></div>
+
+</div>
+
+
+<script>
+
+
+// ========================================
+// ELEMENTS
+// ========================================
+
+const pdfInput =
+    document.getElementById("pdf-file");
+
+const selectedFileArea =
+    document.getElementById("selected-file");
+
+const compressButton =
+    document.getElementById("compress-button");
+
+const resultArea =
+    document.getElementById("result");
+
+const downloadArea =
+    document.getElementById("download-area");
+
+
+// Selected PDF
+
+let selectedFile = null;
+
+
+// ========================================
+// SELECT PDF
+// ========================================
+
+pdfInput.addEventListener(
+    "change",
+    function () {
+
+        if (
+            pdfInput.files.length === 0
+        ) {
+
+            return;
+
+        }
+
+
+        selectedFile =
+            pdfInput.files[0];
+
+
+        showSelectedFile();
+
+    }
+);
+
+
+// ========================================
+// SHOW SELECTED FILE
+// ========================================
+
+function showSelectedFile() {
+
+    selectedFileArea.innerHTML = "";
+
+    resultArea.innerHTML = "";
+
+    downloadArea.innerHTML = "";
+
+
+    if (!selectedFile) {
+
+        return;
+
+    }
+
+
+    // File box
+
+    const fileBox =
+        document.createElement("div");
+
+    fileBox.className =
+        "selected-file";
+
+
+    // PDF icon
+
+    const icon =
+        document.createElement("span");
+
+    icon.className =
+        "pdf-icon";
+
+    icon.textContent =
+        "📄";
+
+
+    // File name
+
+    const fileName =
+        document.createElement("span");
+
+    fileName.className =
+        "selected-file-name";
+
+    fileName.textContent =
+        selectedFile.name;
+
+
+    // Remove button
+
+    const removeButton =
+        document.createElement("button");
+
+    removeButton.type =
+        "button";
+
+    removeButton.textContent =
+        "✕ Remove";
+
+    removeButton.className =
+        "remove-file-btn";
+
+
+    // Remove PDF
+
+    removeButton.onclick =
+        function () {
+
+            selectedFile = null;
+
+            pdfInput.value = "";
+
+            selectedFileArea.innerHTML = "";
+
+            resultArea.innerHTML = "";
+
+            downloadArea.innerHTML = "";
+
+        };
+
+
+    // Add elements
+
+    fileBox.appendChild(icon);
+
+    fileBox.appendChild(fileName);
+
+    fileBox.appendChild(removeButton);
+
+
+    selectedFileArea.appendChild(fileBox);
+
+}
+
+
+// ========================================
+// FORMAT FILE SIZE
+// ========================================
+
+function formatFileSize(bytes) {
+
+    if (bytes < 1024) {
+
+        return bytes + " B";
+
+    }
+
+
+    if (bytes < 1024 * 1024) {
+
+        return (
+            (bytes / 1024).toFixed(2)
+            + " KB"
+        );
+
+    }
+
+
+    return (
+        (bytes / (1024 * 1024)).toFixed(2)
+        + " MB"
+    );
+
+}
+
+
+// ========================================
+// COMPRESS PDF
+// ========================================
+
+compressButton.addEventListener(
+    "click",
+    async function () {
+
+
+        // Check PDF
+
+        if (!selectedFile) {
+
+            alert(
+                "Please select a PDF file."
+            );
+
+            return;
+
+        }
+
+
+        // Create FormData
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "pdf",
+            selectedFile
+        );
+
+
+        // Button status
+
+        compressButton.disabled = true;
+
+        compressButton.textContent =
+            "Compressing...";
+
+
+        resultArea.innerHTML = "";
+
+        downloadArea.innerHTML = "";
+
+
+        try {
+
+
+            // Send PDF to Flask
+
+            const response =
+                await fetch(
+                    "/compress",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            // Check response
+
+            if (!response.ok) {
+
+                const error =
+                    await response.text();
+
+                throw new Error(error);
+
+            }
+
+
+            // Get compressed PDF
+
+            const blob =
+                await response.blob();
+
+
+            // Original size
+
+            const originalSize =
+                selectedFile.size;
+
+
+            // Compressed size
+
+            const compressedSize =
+                blob.size;
+
+
+            // Calculate reduction
+
+            let reduction = 0;
+
+
+            if (originalSize > 0) {
+
+                reduction =
+                    (
+                        (
+                            originalSize
+                            - compressedSize
+                        )
+                        / originalSize
+                    ) * 100;
+
+            }
+
+
+            // Don't show negative reduction
+
+            if (reduction < 0) {
+
+                reduction = 0;
+
+            }
+
+
+            // Show result
+
+            resultArea.innerHTML = `
+
+                <div class="compression-result">
+
+                    <h2>
+                        Compression Complete
+                    </h2>
+
+                    <p>
+                        Original Size:
+                        <strong>
+                            ${formatFileSize(originalSize)}
+                        </strong>
+                    </p>
+
+                    <p>
+                        Compressed Size:
+                        <strong>
+                            ${formatFileSize(compressedSize)}
+                        </strong>
+                    </p>
+
+                    <p>
+                        Size Reduction:
+                        <strong>
+                            ${reduction.toFixed(2)}%
+                        </strong>
+                    </p>
+
+                </div>
+
+            `;
+
+
+            // Create download URL
+
+            const url =
+                window.URL.createObjectURL(
+                    blob
+                );
+
+
+            // Create download button
+
+            const downloadButton =
+                document.createElement("a");
+
+
+            downloadButton.href =
+                url;
+
+
+            downloadButton.download =
+                "compressed.pdf";
+
+
+            downloadButton.textContent =
+                "⬇ Download Compressed PDF";
+
+
+            downloadButton.className =
+                "download-btn";
+
+
+            // Show download button
+
+            downloadArea.appendChild(
+                downloadButton
+            );
+
+
+        }
+        catch (error) {
+
+            alert(
+                "PDF compression failed!\n\n"
+                + error.message
+            );
+
+        }
+
+
+        // Reset button
+
+        compressButton.disabled = false;
+
+        compressButton.textContent =
+            "Compress PDF";
+
+    }
+);
+
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PDF Merger</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>PDF Merger</h1>
+
+    <p class="subtitle">
+        Merge multiple PDF files into one document
+    </p>
+
+
+    <!-- Upload Section -->
+
+    <div class="upload-box">
+
+        <h2>Select PDF Files</h2>
+
+        <p>
+            Choose multiple PDF files to merge
+        </p>
+
+
+        <input
+            type="file"
+            id="pdf-files"
+            accept=".pdf,application/pdf"
+            multiple
+            hidden
+        >
+
+
+        <label
+            for="pdf-files"
+            class="choose-btn">
+
+            + Add PDF
+
+        </label>
+
+    </div>
+
+
+    <!-- File Count -->
+
+    <div id="file-count"></div>
+
+
+    <!-- Selected Files -->
+
+    <div id="file-list"></div>
+
+
+    <!-- Merge Button -->
+
+    <button
+        id="merge-button"
+        class="merge-btn">
+
+        Merge PDFs
+
+    </button>
+
+
+    <!-- Download -->
+
+    <div id="download-area" align="center"></div>
+
+</div>
+
+
+<script>
+
+const pdfInput =
+    document.getElementById("pdf-files");
+
+const fileList =
+    document.getElementById("file-list");
+
+const fileCount =
+    document.getElementById("file-count");
+
+const mergeButton =
+    document.getElementById("merge-button");
+
+const downloadArea =
+    document.getElementById("download-area");
+
+
+let selectedFiles = [];
+
+let draggedIndex = null;
+
+
+
+// ========================================
+// ADD PDF FILES
+// ========================================
+
+pdfInput.addEventListener(
+    "change",
+    function () {
+
+        const files =
+            Array.from(pdfInput.files);
+
+
+        for (const file of files) {
+
+            if (
+                file.type === "application/pdf" ||
+                file.name.toLowerCase().endsWith(".pdf")
+            ) {
+
+                selectedFiles.push(file);
+
+            }
+
+        }
+
+
+        showFiles();
+
+
+        // Allow selecting same file again
+
+        pdfInput.value = "";
+
+    }
+);
+
+
+
+// ========================================
+// SHOW SELECTED FILES
+// ========================================
+
+function showFiles() {
+
+    fileList.innerHTML = "";
+
+
+    if (selectedFiles.length === 0) {
+
+        fileCount.textContent =
+            "No PDF files selected";
+
+        return;
+
+    }
+
+
+    fileCount.textContent =
+        selectedFiles.length +
+        " PDF file" +
+        (selectedFiles.length !== 1 ? "s" : "") +
+        " selected";
+
+
+
+    selectedFiles.forEach(
+        function (file, index) {
+
+
+            const fileItem =
+                document.createElement("div");
+
+
+            fileItem.className =
+                "file-item";
+
+
+            // Enable drag and drop
+
+            fileItem.draggable = true;
+
+
+
+            // ====================================
+            // DRAG START
+            // ====================================
+
+            fileItem.addEventListener(
+                "dragstart",
+                function () {
+
+                    draggedIndex = index;
+
+                    fileItem.classList.add(
+                        "dragging"
+                    );
+
+                }
+            );
+
+
+
+            // ====================================
+            // DRAG END
+            // ====================================
+
+            fileItem.addEventListener(
+                "dragend",
+                function () {
+
+                    fileItem.classList.remove(
+                        "dragging"
+                    );
+
+                    draggedIndex = null;
+
+                }
+            );
+
+
+
+            // ====================================
+            // DRAG OVER
+            // ====================================
+
+            fileItem.addEventListener(
+                "dragover",
+                function (event) {
+
+                    event.preventDefault();
+
+                }
+            );
+
+
+
+            // ====================================
+            // DROP
+            // ====================================
+
+            fileItem.addEventListener(
+                "drop",
+                function (event) {
+
+                    event.preventDefault();
+
+
+                    const targetIndex =
+                        index;
+
+
+                    if (
+                        draggedIndex === null ||
+                        draggedIndex === targetIndex
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const draggedFile =
+                        selectedFiles.splice(
+                            draggedIndex,
+                            1
+                        )[0];
+
+
+                    selectedFiles.splice(
+                        targetIndex,
+                        0,
+                        draggedFile
+                    );
+
+
+                    showFiles();
+
+                }
+            );
+
+
+
+            // ====================================
+            // NUMBER
+            // ====================================
+
+            const number =
+                document.createElement("span");
+
+
+            number.className =
+                "file-number";
+
+
+            number.textContent =
+                index + 1;
+
+
+
+            // ====================================
+            // DRAG ICON
+            // ====================================
+
+            const dragIcon =
+                document.createElement("span");
+
+
+            dragIcon.className =
+                "drag-icon";
+
+
+            dragIcon.textContent =
+                "☷";
+
+
+
+            // ====================================
+            // FILE NAME
+            // ====================================
+
+            const fileName =
+                document.createElement("span");
+
+
+            fileName.className =
+                "file-name";
+
+
+            fileName.textContent =
+                file.name;
+
+
+
+            // ====================================
+            // CONTROLS
+            // ====================================
+
+            const controls =
+                document.createElement("div");
+
+
+            controls.className =
+                "file-controls";
+
+
+
+            // ====================================
+            // UP BUTTON
+            // ====================================
+
+            const upButton =
+                document.createElement("button");
+
+
+            upButton.type =
+                "button";
+
+
+            upButton.textContent =
+                "↑";
+
+
+            upButton.title =
+                "Move Up";
+
+
+            upButton.onclick =
+                function (event) {
+
+                    event.stopPropagation();
+
+
+                    if (index === 0) {
+
+                        return;
+
+                    }
+
+
+                    const temp =
+                        selectedFiles[index - 1];
+
+
+                    selectedFiles[index - 1] =
+                        selectedFiles[index];
+
+
+                    selectedFiles[index] =
+                        temp;
+
+
+                    showFiles();
+
+                };
+
+
+
+            // ====================================
+            // DOWN BUTTON
+            // ====================================
+
+            const downButton =
+                document.createElement("button");
+
+
+            downButton.type =
+                "button";
+
+
+            downButton.textContent =
+                "↓";
+
+
+            downButton.title =
+                "Move Down";
+
+
+            downButton.onclick =
+                function (event) {
+
+                    event.stopPropagation();
+
+
+                    if (
+                        index ===
+                        selectedFiles.length - 1
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const temp =
+                        selectedFiles[index + 1];
+
+
+                    selectedFiles[index + 1] =
+                        selectedFiles[index];
+
+
+                    selectedFiles[index] =
+                        temp;
+
+
+                    showFiles();
+
+                };
+
+
+
+            // ====================================
+            // REMOVE BUTTON
+            // ====================================
+
+            const removeButton =
+                document.createElement("button");
+
+
+            removeButton.type =
+                "button";
+
+
+            removeButton.textContent =
+                "✕";
+
+
+            removeButton.title =
+                "Remove";
+
+
+            removeButton.onclick =
+                function (event) {
+
+                    event.stopPropagation();
+
+
+                    selectedFiles.splice(
+                        index,
+                        1
+                    );
+
+
+                    showFiles();
+
+                };
+
+
+
+            // Add buttons
+
+            controls.appendChild(
+                upButton
+            );
+
+            controls.appendChild(
+                downButton
+            );
+
+            controls.appendChild(
+                removeButton
+            );
+
+
+
+            // Add everything to file item
+
+            fileItem.appendChild(
+                number
+            );
+
+            fileItem.appendChild(
+                dragIcon
+            );
+
+            fileItem.appendChild(
+                fileName
+            );
+
+            fileItem.appendChild(
+                controls
+            );
+
+
+            fileList.appendChild(
+                fileItem
+            );
+
+        }
+    );
+
+}
+
+
+
+// ========================================
+// MERGE PDF
+// ========================================
+
+mergeButton.addEventListener(
+    "click",
+    async function () {
+
+
+        if (selectedFiles.length === 0) {
+
+            alert(
+                "Please add at least one PDF file."
+            );
+
+            return;
+
+        }
+
+
+
+        const formData =
+            new FormData();
+
+
+
+        // Add files in current order
+
+        selectedFiles.forEach(
+            function (file) {
+
+                formData.append(
+                    "pdfs",
+                    file
+                );
+
+            }
+        );
+
+
+
+        mergeButton.disabled = true;
+
+
+        mergeButton.textContent =
+            "Merging...";
+
+
+
+        try {
+
+
+            const response =
+                await fetch(
+                    "/merge",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+
+            if (!response.ok) {
+
+                const errorText =
+                    await response.text();
+
+
+                throw new Error(
+                    errorText
+                );
+
+            }
+
+
+
+            const blob =
+                await response.blob();
+
+
+
+            const url =
+                window.URL.createObjectURL(
+                    blob
+                );
+
+
+
+            // Download button
+
+            const downloadButton =
+                document.createElement("a");
+
+
+            downloadButton.href =
+                url;
+
+
+            downloadButton.download =
+                "merged.pdf";
+
+
+            downloadButton.textContent =
+                "⬇ Download Merged PDF";
+
+
+            downloadButton.className =
+                "download-btn";
+
+
+
+            downloadArea.innerHTML =
+                "";
+
+
+            downloadArea.appendChild(
+                downloadButton
+            );
+
+
+
+            alert(
+                "PDFs merged successfully!"
+            );
+
+
+        }
+        catch (error) {
+
+
+            alert(
+                "PDF merge failed!\n\n" +
+                error.message
+            );
+
+        }
+
+
+
+        mergeButton.disabled =
+            false;
+
+
+        mergeButton.textContent =
+            "Merge PDFs";
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>PDF Rotator</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>PDF Rotator</h1>
+
+    <p class="subtitle">
+        Rotate your PDF pages easily
+    </p>
+
+
+    <!-- =========================
+         SELECT PDF
+    ========================== -->
+
+    <div class="upload-box">
+
+        <h2>Select PDF</h2>
+
+        <p>
+            Choose a PDF file to rotate
+        </p>
+
+        <input
+            type="file"
+            id="pdf-file"
+            accept=".pdf,application/pdf"
+            hidden
+        >
+
+        <label
+            for="pdf-file"
+            class="choose-btn">
+
+            + Select PDF
+
+        </label>
+
+    </div>
+
+
+    <!-- =========================
+         SELECTED FILE
+    ========================== -->
+
+    <div id="selected-file"></div>
+
+
+    <!-- =========================
+         ROTATION OPTIONS
+    ========================== -->
+
+    <div class="rotate-options">
+
+        <h2>Choose Rotation</h2>
+
+        <label class="rotation-option">
+
+            <input
+                type="radio"
+                name="rotation"
+                value="90"
+                checked
+            >
+
+            ↻ 90° Clockwise
+
+        </label>
+
+
+        <label class="rotation-option">
+
+            <input
+                type="radio"
+                name="rotation"
+                value="180"
+            >
+
+            🔄 180°
+
+        </label>
+
+
+        <label class="rotation-option">
+
+            <input
+                type="radio"
+                name="rotation"
+                value="270"
+            >
+
+            ↺ 90° Counterclockwise
+
+        </label>
+
+    </div>
+
+
+    <!-- =========================
+         ROTATE BUTTON
+    ========================== -->
+
+    <button
+        id="rotate-button"
+        class="merge-btn">
+
+        Rotate PDF
+
+    </button>
+
+
+    <!-- =========================
+         DOWNLOAD
+    ========================== -->
+
+    <div id="download-area" align="center"></div>
+
+</div>
+
+
+<script>
+
+// ========================================
+// ELEMENTS
+// ========================================
+
+const pdfInput =
+    document.getElementById("pdf-file");
+
+const selectedFileArea =
+    document.getElementById("selected-file");
+
+const rotateButton =
+    document.getElementById("rotate-button");
+
+const downloadArea =
+    document.getElementById("download-area");
+
+
+// Selected PDF
+
+let selectedFile = null;
+
+
+// ========================================
+// SELECT PDF
+// ========================================
+
+pdfInput.addEventListener(
+    "change",
+    function () {
+
+        if (pdfInput.files.length === 0) {
+
+            return;
+
+        }
+
+
+        selectedFile =
+            pdfInput.files[0];
+
+
+        showSelectedFile();
+
+    }
+);
+
+
+// ========================================
+// SHOW SELECTED FILE
+// ========================================
+
+function showSelectedFile() {
+
+    selectedFileArea.innerHTML = "";
+
+
+    if (!selectedFile) {
+
+        return;
+
+    }
+
+
+    const fileBox =
+        document.createElement("div");
+
+    fileBox.className =
+        "selected-file";
+
+
+    // PDF icon
+
+    const icon =
+        document.createElement("span");
+
+    icon.className =
+        "pdf-icon";
+
+    icon.textContent =
+        "📄";
+
+
+    // File name
+
+    const fileName =
+        document.createElement("span");
+
+    fileName.className =
+        "selected-file-name";
+
+    fileName.textContent =
+        selectedFile.name;
+
+
+    // Remove button
+
+    const removeButton =
+        document.createElement("button");
+
+    removeButton.type =
+        "button";
+
+    removeButton.textContent =
+        "✕ Remove";
+
+    removeButton.className =
+        "remove-file-btn";
+
+
+    removeButton.onclick =
+        function () {
+
+            selectedFile = null;
+
+            pdfInput.value = "";
+
+            selectedFileArea.innerHTML = "";
+
+            downloadArea.innerHTML = "";
+
+        };
+
+
+    // Add elements
+
+    fileBox.appendChild(icon);
+
+    fileBox.appendChild(fileName);
+
+    fileBox.appendChild(removeButton);
+
+
+    selectedFileArea.appendChild(fileBox);
+
+}
+
+
+// ========================================
+// ROTATE PDF
+// ========================================
+
+rotateButton.addEventListener(
+    "click",
+    async function () {
+
+
+        // Check PDF
+
+        if (!selectedFile) {
+
+            alert(
+                "Please select a PDF file."
+            );
+
+            return;
+
+        }
+
+
+        // Get selected rotation
+
+        const rotation =
+            document.querySelector(
+                'input[name="rotation"]:checked'
+            ).value;
+
+
+        // Create FormData
+
+        const formData =
+            new FormData();
+
+
+        formData.append(
+            "pdf",
+            selectedFile
+        );
+
+
+        formData.append(
+            "rotation",
+            rotation
+        );
+
+
+        // Button status
+
+        rotateButton.disabled = true;
+
+        rotateButton.textContent =
+            "Rotating...";
+
+
+        try {
+
+            // Send PDF to Flask
+
+            const response =
+                await fetch(
+                    "/rotate",
+                    {
+                        method: "POST",
+                        body: formData
+                    }
+                );
+
+
+            // Check response
+
+            if (!response.ok) {
+
+                const error =
+                    await response.text();
+
+                throw new Error(error);
+
+            }
+
+
+            // Get returned PDF
+
+            const blob =
+                await response.blob();
+
+
+            // Create download URL
+
+            const url =
+                window.URL.createObjectURL(
+                    blob
+                );
+
+
+            // Create download button
+
+            const downloadButton =
+                document.createElement("a");
+
+
+            downloadButton.href =
+                url;
+
+
+            downloadButton.download =
+                "rotated.pdf";
+
+
+            downloadButton.textContent =
+                "⬇ Download Rotated PDF";
+
+
+            downloadButton.className =
+                "download-btn";
+
+
+            // Show download button
+
+            downloadArea.innerHTML =
+                "";
+
+            downloadArea.appendChild(
+                downloadButton
+            );
+
+
+            alert(
+                "PDF rotated successfully!"
+            );
+
+
+        }
+        catch (error) {
+
+            alert(
+                "PDF rotation failed!\n\n" +
+                error.message
+            );
+
+        }
+
+
+        // Reset button
+
+        rotateButton.disabled = false;
+
+        rotateButton.textContent =
+            "Rotate PDF";
+
+    }
+);
+
+</script>
+
+</body>
+
+</html>
