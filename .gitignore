@@ -1,6 +1,7 @@
-uploads/
-*.pdf
+.idea/
 __pycache__/
 *.pyc
+uploads/
+*.pdf
 .venv/
 venv/
